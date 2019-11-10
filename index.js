@@ -41,6 +41,19 @@ let packetHandler = (packet, fromSide) => {
     return;
   }
 
+  if (packet.type === "hitPlayer") {
+    if (fromSide === RIGHT) {
+      packet.increment = "leftSide"
+    } else {
+      packet.increment = "rightSide"
+    }
+
+    io.emit(RIGHT, packet);
+    io.emit(LEFT, packet);
+    
+    return
+  }
+
   if (fromSide === LEFT) {
     packet.messageFromServer = "message from left"
     io.emit(RIGHT, packet);
