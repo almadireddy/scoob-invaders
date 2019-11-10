@@ -7,6 +7,15 @@ const io = require("socket.io")(server);
 const LEFT = "leftSide";
 const RIGHT = "rightSide";
 
+let scores = {
+  leftScore: 0,
+  rightScore: 0
+}
+resetScore = () => {
+  scores.leftScore = 0;
+  scores.rightScore = 0;
+}
+
 server.listen(process.env.PORT || 8080);
 app.use(express.static('public'));
 
@@ -43,11 +52,14 @@ let packetHandler = (packet, fromSide) => {
 
   if (packet.type === "hitPlayer") {
     if (fromSide === RIGHT) {
-      packet.increment = "leftSide"
+      scores.leftScore++;
     } else {
-      packet.increment = "rightSide"
+      scores.rightScore++;
     }
 
+    packet.scores = scores;
+
+    console.log(scores);
     io.emit(RIGHT, packet);
     io.emit(LEFT, packet);
 
@@ -88,9 +100,9 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => { 
-    console.log("a user disconnected.");
     numberOfClients--; 
-    console.log(numberOfClients);
+    resetScore();
+    
     if (numberOfClients == 0) {
       leftReady = false;
       rightReady = false;
