@@ -38,6 +38,7 @@ let packetHandler = (packet, fromSide) => {
       io.emit(LEFT, message);
       io.emit(RIGHT, message);
     }
+    return;
   }
 
   if (fromSide === LEFT) {
