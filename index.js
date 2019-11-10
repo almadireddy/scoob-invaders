@@ -50,7 +50,7 @@ let packetHandler = (packet, fromSide) => {
 
     io.emit(RIGHT, packet);
     io.emit(LEFT, packet);
-    
+
     return
   }
 
@@ -73,6 +73,11 @@ io.on('connection', socket => {
   console.log("a user connected.");
   numberOfClients++; 
   console.log(numberOfClients)
+
+  if (numberOfClients > 2) {
+    socket.disconnect(true);
+    numberOfClients--;
+  }
 
   socket.on(LEFT, (packet) => {
     packetHandler(packet, LEFT)
