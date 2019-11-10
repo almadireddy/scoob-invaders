@@ -7,24 +7,34 @@ const io = require("socket.io")(server);
 server.listen(process.env.PORT || 8080);
 app.use(express.static('public'));
 
-let leftSide  = {
-  connected: false
-};
+let printInfo = (packet) => {
+  console.log(packet.information);
+}
 
-let rightSide = {
-  connected: false
-};
+let packetHandler = (packet, fromSide) => {
+  if (packet.type === "info") {
+    printInfo(packet);
+    return;
+  }
+
+  if (fromSide === "leftSide") {
+    packet.messageFromServer = "message from left"
+    io.emit("rightSide", packet);
+  } 
+  else if (fromSide === "rightSide") {
+    packet.messageFromServer = "message from right"
+    io.emit("leftSide", packet)
+  }
+}
 
 io.on('connection', socket => {
   console.log("a user connected.");
 
-  socket.on("leftSide", (info) => {
-    console.log(info);
-    leftSide.connected = true;
+  socket.on("leftSide", (packet) => {
+    packetHandler(packet, "leftSide")
   })
 
-  socket.on('rightSide', (info) => {
-    console.log(info),
-    rightSide.connected = true;
+  socket.on('rightSide', (packet) => {
+    packetHandler(packet, "rightSide")
   })
 })

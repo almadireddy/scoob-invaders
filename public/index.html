@@ -4,8 +4,19 @@
   </head>
   <body>
 
-    <input type="radio" value="left">Left Side</input>
-    <input type="radio" value="right">Right Side</input>
+    <form name="sideSelector">
+      <input 
+        checked="false" 
+        type="radio" 
+        name="side"
+        value="leftSide">Left Side</input>
+      <input 
+        checked='false' 
+        type="radio" 
+        name="side" 
+        value="rightSide">Right Side</input>
+    </form>
+    <button>Select</button>
     <!-- required scripts -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/main.js"></script>
